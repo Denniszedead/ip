@@ -19,7 +19,8 @@ public class Parser {
         String parameter = "";
 
         // Split the parameter into command and parameter based on white space.
-        String[] strings = userInput.split("\\s+");
+        String whitespaceWord = "\\s+";
+        String[] strings = userInput.split(whitespaceWord);
         if (strings.length < 2) {
             // If there are no words after space.
             command = userInput;

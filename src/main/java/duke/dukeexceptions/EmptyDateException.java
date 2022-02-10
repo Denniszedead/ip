@@ -11,11 +11,16 @@ public final class EmptyDateException extends DukeExceptions {
     /**
      * Creates the Empty Date exception when no date is entered for commands that requires dates.
      *
-     * @param taskCmd Type of command entered.
+     * @param cmd Type of command entered.
      * @return The empty date exception.
      * @throws EmptyDateException The empty date exception.
      */
-    public static EmptyDateException createEmptyDate(String taskCmd) throws EmptyDateException {
-        throw new EmptyDateException(taskCmd.substring(0, 1).toUpperCase() + taskCmd.substring(1) + " needs a date");
+    public static EmptyDateException createEmptyDate(String cmd) throws EmptyDateException {
+        String closingSentence = " needs a date";
+        String taskTypeFirstLetter = cmd.substring(0, 1).toUpperCase();
+        String taskTypeRemainingLetters = cmd.substring(1);
+        String taskType = taskTypeFirstLetter.concat(taskTypeRemainingLetters);
+        String errorMessage = taskType.concat(closingSentence);
+        throw new EmptyDateException(errorMessage);
     }
 }

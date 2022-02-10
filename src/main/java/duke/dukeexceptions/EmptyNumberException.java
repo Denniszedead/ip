@@ -17,6 +17,11 @@ public final class EmptyNumberException extends DukeExceptions {
      *                              command requires it.
      */
     public static EmptyNumberException createEmptyNumber(String cmd) throws EmptyNumberException {
-        throw new EmptyNumberException(cmd.substring(0, 1).toUpperCase() + cmd.substring(1) + " needs a number");
+        String closingStatement = " needs a number";
+        String cmdFirstLetter = cmd.substring(0, 1).toUpperCase();
+        String cmdRestOfTheLetters = cmd.substring(1);
+        String commandString = cmdFirstLetter.concat(cmdRestOfTheLetters);
+        String errorMessage = commandString.concat(closingStatement);
+        throw new EmptyNumberException(errorMessage);
     }
 }

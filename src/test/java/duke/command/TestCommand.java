@@ -32,7 +32,7 @@ public class TestCommand {
             Command cmd = Command.getCommand("Some", "random command");
             Assertions.fail();
         } catch (Exception e) {
-            Assertions.assertEquals("Sorry! I don't undestand what are you saying!", e.getMessage());
+            Assertions.assertEquals("Sorry! I don't understand what are you saying!", e.getMessage());
         }
     }
 
@@ -76,9 +76,10 @@ public class TestCommand {
         try {
             TaskList taskList = storage.getData();
             Command cmd = Command.getCommand("LIST", "");
-            Assertions.assertEquals(expected, cmd.run(taskList, storage));
+            String result = cmd.run(taskList, storage);
+            Assertions.assertEquals(expected, result);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             Assertions.fail();
         }
     }
@@ -122,7 +123,7 @@ public class TestCommand {
             FileWriter fw = new FileWriter(dataFile);
 
             // Add the initial data into the data file.
-            tasks.addTask(Task.createTask("TODO", false, "Task 1", ""));
+            tasks.addTask(Task.createTask("TODO", false, "Task 1", null));
             storage.updateData(tasks);
             String result = "";
             while (sc.hasNext()) {
@@ -193,7 +194,7 @@ public class TestCommand {
             FileWriter fw = new FileWriter(dataFile);
 
             // Initialize the data in the data file.
-            tasks.addTask(Task.createTask("TODO", true, "Task 1", ""));
+            tasks.addTask(Task.createTask("TODO", true, "Task 1", null));
             storage.updateData(tasks);
             String result = "";
             while (sc.hasNext()) {
@@ -232,7 +233,7 @@ public class TestCommand {
             String result = cmd.run(tasks, storage);
             Assertions.fail();
         } catch (DukeExceptions e) {
-            Assertions.assertEquals("Are you tryng to add something to todo", e.getMessage());
+            Assertions.assertEquals("Are you trying to add something to Todo", e.getMessage());
         }
     }
 
@@ -292,7 +293,7 @@ public class TestCommand {
             String result = cmd.run(tasks, storage);
             Assertions.fail();
         } catch (DukeExceptions e) {
-            Assertions.assertEquals("Are you tryng to add something to deadline", e.getMessage());
+            Assertions.assertEquals("Are you trying to add something to Deadline", e.getMessage());
         }
     }
 
@@ -321,6 +322,23 @@ public class TestCommand {
             Assertions.fail();
         } catch (DukeExceptions e) {
             Assertions.assertEquals("Please enter the date for the following format: dd/mm/yyyy HHmm.", e.getMessage());
+        }
+    }
+
+    @Test
+    void createDeadlineCommand_duplicatedDate_throwsDateClashException() {
+        String fileName = "data/test/dukeDuplicatedDateTest.txt";
+        String date = "1/1/2022 2359";
+        String expected = "There is already a deadline/event scheduled on " + date;
+        try {
+            Storage storage = new Storage(fileName);
+            TaskList tasks = storage.getData();
+            String parameter = "Deadline 2 /by " + date;
+            Command cmd = Command.getCommand("DEADLINE", parameter);
+            String result = cmd.run(tasks, storage);
+            Assertions.fail();
+        } catch (Exception e) {
+            Assertions.assertEquals(expected, e.getMessage());
         }
     }
 
@@ -367,7 +385,7 @@ public class TestCommand {
             fw.write("");
             fw.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             Assertions.fail();
         }
     }
@@ -382,7 +400,7 @@ public class TestCommand {
             String result = cmd.run(tasks, storage);
             Assertions.fail();
         } catch (DukeExceptions e) {
-            Assertions.assertEquals("Are you tryng to add something to event", e.getMessage());
+            Assertions.assertEquals("Are you trying to add something to Event", e.getMessage());
         }
     }
 
@@ -411,6 +429,23 @@ public class TestCommand {
             Assertions.fail();
         } catch (DukeExceptions e) {
             Assertions.assertEquals("Please enter the date for the following format: dd/mm/yyyy HHmm.", e.getMessage());
+        }
+    }
+
+    @Test
+    void createEventCommand_duplicatedDate_throwsDateClashException() {
+        String fileName = "data/test/dukeDuplicatedDateTest.txt";
+        String date = "1/1/2022 2359";
+        String expected = "There is already a deadline/event scheduled on " + date;
+        try {
+            Storage storage = new Storage(fileName);
+            TaskList tasks = storage.getData();
+            String parameter = "Event 2 /at " + date;
+            Command cmd = Command.getCommand("EVENT", parameter);
+            String result = cmd.run(tasks, storage);
+            Assertions.fail();
+        } catch (Exception e) {
+            Assertions.assertEquals(expected, e.getMessage());
         }
     }
 
@@ -500,7 +535,7 @@ public class TestCommand {
         Storage storage = new Storage(fileName);
         TaskList tasks = new TaskList();
         try {
-            tasks.addTask(Task.createTask("TODO", false, "Task 1", ""));
+            tasks.addTask(Task.createTask("TODO", false, "Task 1", null));
             storage.updateData(tasks);
             File dataFile = new File(fileName);
             Scanner sc = new Scanner(dataFile);
@@ -562,5 +597,30 @@ public class TestCommand {
             System.out.println(e.getMessage());
             Assertions.fail();
         }
+    }
+
+    @Test
+    void createHelpCommand_helpCommand_returnsStringWithHelpOfAllCommands() {
+        String expected = "Here are the tasks avaliable for duke:\n"
+                + "List: Shows all the tasks in duke\n"
+                + "Mark <number>: Marks the task in the index <number>\n"
+                + "Unmark <number>: Unmarks the task in the index <number>\n"
+                + "Find <keyword>: finds all the task that contains <keyword>\n"
+                + "Delete <number>: Deletes the task in index <number>\n"
+                + "Todo <name of todo>: Creates a new todo <name of todo>\n"
+                + "Deadline <name of deadline> <date of deadline in dd/mm/yyyy HHmm>: "
+                + "Creates a new deadline <name of deadline> at <date of deadline in dd/mm/yyyy HHmm>\n"
+                + "Event <name of deadline> <date of deadline in dd/mm/yyyy HHmm>: "
+                + "Creates a new event <name of deadline> at <date of deadline in dd/mm/yyyy HHmm>\n"
+                + "Bye: Exits duke.";
+        try {
+            Command cmd = Command.getCommand("HELP", "");
+            Storage storage = new Storage(fileName);
+            TaskList tasks = new TaskList();
+            Assertions.assertEquals(expected, cmd.run(tasks, storage));
+        } catch (Exception e) {
+            Assertions.fail();
+        }
+
     }
 }

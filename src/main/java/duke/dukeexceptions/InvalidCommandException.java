@@ -26,8 +26,9 @@ public abstract class InvalidCommandException extends DukeExceptions {
  * The missing command exception that represents the user enters an empty command.
  */
 final class MissingCommandException extends InvalidCommandException {
+    private static final String ERROR_MESSAGE = "Sorry, I don't see any commands!";
     MissingCommandException() {
-        super("Sorry, I don't see any commands!");
+        super(ERROR_MESSAGE);
     }
 }
 
@@ -35,7 +36,8 @@ final class MissingCommandException extends InvalidCommandException {
  * The incorrect command exception that represents the users enters a command that is not specified by Duke.
  */
 final class IncorrectCommandException extends InvalidCommandException {
+    private static final String ERROR_MESSAGE = "Sorry! I don't understand what are you saying!";
     IncorrectCommandException() {
-        super("Sorry! I don't undestand what are you saying!");
+        super(ERROR_MESSAGE);
     }
 }

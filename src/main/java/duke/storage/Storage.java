@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 import duke.dukeexceptions.DukeExceptions;
@@ -14,6 +16,9 @@ import duke.tasklist.TaskList;
  * The Storage object acts as an interface between Duke and the filename for database management.
  */
 public class Storage {
+    /** The formatter to format the user entered date. */
+    protected static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
+    private static final String NEXT_ITEM_LINE = "*** Next Task ***";
     /** The file which stores the tasks in the task list. */
     private File file;
 
@@ -23,6 +28,7 @@ public class Storage {
      * @param filename THe file where the tasks in the tasks list is retrieved and stored.
      */
     public Storage(String filename) {
+        assert filename != null : "Filename is empty";
         this.file = new File(filename);
     }
 
@@ -42,12 +48,14 @@ public class Storage {
             String type = fileInput.nextLine();
             Boolean isDone = Boolean.parseBoolean(fileInput.nextLine());
             String name = fileInput.nextLine();
-            String date = fileInput.nextLine();
-
+            String dateString = fileInput.nextLine();
+            LocalDateTime date = null;
             // If the program finishes processing a task.
-            if (date.equals("*** Next Task ***")) {
+            if (dateString.equals(NEXT_ITEM_LINE)) {
                 date = null;
             } else {
+                // Changes the date to the LocalDateFormat
+                date = LocalDateTime.parse(dateString, FORMATTER);
                 fileInput.nextLine();
             }
 

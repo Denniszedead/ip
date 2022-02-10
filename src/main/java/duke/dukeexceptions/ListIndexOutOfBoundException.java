@@ -5,7 +5,8 @@ package duke.dukeexceptions;
  * number of tasks in the task list.
  */
 public final class ListIndexOutOfBoundException extends DukeExceptions {
+    private static final String ERROR_MESSAGE = "Index is out of bond!";
     public ListIndexOutOfBoundException() {
-        super("Index is out of bond!");
+        super(ERROR_MESSAGE);
     }
 }

@@ -8,12 +8,6 @@ import duke.dukeexceptions.DukeExceptions;
 import duke.praser.Parser;
 import duke.storage.Storage;
 import duke.tasklist.TaskList;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
 
 /**
  * Duke is a task list CLI application that stores three types of tasks, Todos, Deadlines and Events.
@@ -25,22 +19,13 @@ public class Duke {
     /** The Task List that stores all the tasks */
     private TaskList taskList;
 
-    private ScrollPane scrollPane;
-    private VBox dialogContainer;
-    private TextField userInput;
-    private Button sendButton;
-    private Scene scene;
-
-    private Image pcPrincipal = new Image(this.getClass().getResourceAsStream("/image/pcPrincipal.png"));
-    private Image cartman = new Image(this.getClass().getResourceAsStream("/image/cartman.png"));
-
     /**
      * Constructs a new Duke application.
      *
      * @param filename The file which contains the list of tasks.
      */
     public Duke(String filename) {
-
+        assert filename.equals("data/duke.txt") : "File data/duke.txt not found!";
         // Gets the data from filename and creates a new task list based on the data in filename.
         try {
             storage = new Storage(filename);
@@ -74,6 +59,5 @@ public class Duke {
         } catch (DukeExceptions e) {
             return "Found an error:\n" + e.getMessage();
         }
-
     }
 }
