@@ -18,6 +18,9 @@ jobs:
         with:
           ref: master
 
+      - name: Merge to master
+        run: git checkout --progress --force ${{ github.sha }}
+
       - name: Validate Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
 
@@ -29,6 +32,3 @@ jobs:
 
       - name: Build and check with Gradle
         run: ./gradlew check
-
-      - name: Test with Gradle
-        run: ./geadlew test
